@@ -80,7 +80,7 @@ namespace BlogSpot.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> TagDelete(string id)
+        public async Task<IActionResult> TagDelete(Guid id)
         {
             if (!ModelState.IsValid)
             {
@@ -90,18 +90,19 @@ namespace BlogSpot.Web.Controllers
 
             try
             {
+                //Find Tag and then delete it if it exists
+                var tag = await _blogSpotDbContext.Tags.FindAsync(id);
 
-                var tagId = await _blogSpotDbContext.Tags.FindAsync(id);
-
-                if (tagId != null)
+                if (tag != null)
                 {
-                    _blogSpotDbContext.Tags.Remove(tagId);
+                    _blogSpotDbContext.Tags.Remove(tag);
                     await _blogSpotDbContext.SaveChangesAsync();
+                    return View("TagList", await _blogSpotDbContext.Tags.ToListAsync()); //Review this return, is this the best way to do it?
                 } else
                 {
                     // Tag ID does not exist
                     ModelState.AddModelError("", "Tag with this Id does not exist.");
-                    return View("TagList");
+                    return View("TagList", await _blogSpotDbContext.Tags.ToListAsync());
                 }
 
             }
@@ -109,10 +110,60 @@ namespace BlogSpot.Web.Controllers
             {
                 // Handle database operation errors
                 ModelState.AddModelError("", "An error occurred while processing your request. Please try again later.");
-                return View("TagList");
+                return View("TagList", await _blogSpotDbContext.Tags.ToListAsync()); 
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TagEdit(Guid id)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Invalid input, return a bad request or display validation errors
+                return BadRequest(ModelState);
             }
 
-            return View("tagList");
+            var tag = await _blogSpotDbContext.Tags.FindAsync(id);
+
+            return View(tag);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TagEdit(Tag viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Invalid input, return a bad request or display validation errors
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                //Find Tag and then update it with new info
+                var tag = await _blogSpotDbContext.Tags.FindAsync(viewModel.Id);
+
+                if (tag != null)
+                {
+                    tag.Name = viewModel.Name;
+                    tag.DisplayName = viewModel.DisplayName;
+
+                    await _blogSpotDbContext.SaveChangesAsync();
+                    return View("TagEdit", tag.Id); //Review this return, is this the best way to do it?
+                }
+                else
+                {
+                    // Tag ID does not exist
+                    ModelState.AddModelError("", "Tag with this Id does not exist.");
+                    return View("TagList", await _blogSpotDbContext.Tags.ToListAsync());
+                }
+
+            }
+            catch (Exception)
+            {
+                // Handle database operation errors
+                ModelState.AddModelError("", "An error occurred while processing your request. Please try again later.");
+                return View("TagList", await _blogSpotDbContext.Tags.ToListAsync());
+            }
         }
     }
 }
