@@ -49,7 +49,8 @@ namespace BlogSpot.Web.Controllers
 
                     // Tag added successfully, redirect to a success page or display a success message
                     return RedirectToAction("TagAdd");
-                } else
+                }
+                else
                 {
                     // Duplicate tag found, return an error or display a message to the user
                     ModelState.AddModelError("", "Tag with the same Name and DisplayName already exists.");
@@ -76,6 +77,7 @@ namespace BlogSpot.Web.Controllers
             // Getting list of all Tags from DB
             var tagList = await _blogSpotDbContext.Tags.ToListAsync();
 
+
             return View(tagList);
         }
 
@@ -98,31 +100,25 @@ namespace BlogSpot.Web.Controllers
                     _blogSpotDbContext.Tags.Remove(tag);
                     await _blogSpotDbContext.SaveChangesAsync();
                     return View("TagList", await _blogSpotDbContext.Tags.ToListAsync()); //Review this return, is this the best way to do it?
-                } else
+                }
+                else
                 {
                     // Tag ID does not exist
                     ModelState.AddModelError("", "Tag with this Id does not exist.");
                     return View("TagList", await _blogSpotDbContext.Tags.ToListAsync());
                 }
-
             }
             catch (Exception)
             {
                 // Handle database operation errors
                 ModelState.AddModelError("", "An error occurred while processing your request. Please try again later.");
-                return View("TagList", await _blogSpotDbContext.Tags.ToListAsync()); 
+                return View("TagList", await _blogSpotDbContext.Tags.ToListAsync());
             }
         }
 
         [HttpGet]
         public async Task<IActionResult> TagEdit(Guid id)
         {
-            if (!ModelState.IsValid)
-            {
-                // Invalid input, return a bad request or display validation errors
-                return BadRequest(ModelState);
-            }
-
             var tag = await _blogSpotDbContext.Tags.FindAsync(id);
 
             return View(tag);
@@ -148,7 +144,7 @@ namespace BlogSpot.Web.Controllers
                     tag.DisplayName = viewModel.DisplayName;
 
                     await _blogSpotDbContext.SaveChangesAsync();
-                    return View("TagEdit", tag.Id); //Review this return, is this the best way to do it?
+                    return View("TagList", await _blogSpotDbContext.Tags.ToListAsync()); //Review this return, is this the best way to do it?
                 }
                 else
                 {
@@ -156,7 +152,6 @@ namespace BlogSpot.Web.Controllers
                     ModelState.AddModelError("", "Tag with this Id does not exist.");
                     return View("TagList", await _blogSpotDbContext.Tags.ToListAsync());
                 }
-
             }
             catch (Exception)
             {

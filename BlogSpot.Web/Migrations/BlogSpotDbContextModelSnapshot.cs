@@ -22,21 +22,6 @@ namespace BlogSpot.Web.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BlogPostTag", b =>
-                {
-                    b.Property<Guid>("TagsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("blogPostsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("TagsId", "blogPostsId");
-
-                    b.HasIndex("blogPostsId");
-
-                    b.ToTable("BlogPostTag");
-                });
-
             modelBuilder.Entity("BlogSpot.Web.Models.Domain.BlogPost", b =>
                 {
                     b.Property<Guid>("Id")
@@ -88,6 +73,9 @@ namespace BlogSpot.Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("BlogPostId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -98,22 +86,21 @@ namespace BlogSpot.Web.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BlogPostId");
+
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("BlogPostTag", b =>
+            modelBuilder.Entity("BlogSpot.Web.Models.Domain.Tag", b =>
                 {
-                    b.HasOne("BlogSpot.Web.Models.Domain.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BlogSpot.Web.Models.Domain.BlogPost", null)
-                        .WithMany()
-                        .HasForeignKey("blogPostsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Tags")
+                        .HasForeignKey("BlogPostId");
+                });
+
+            modelBuilder.Entity("BlogSpot.Web.Models.Domain.BlogPost", b =>
+                {
+                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }

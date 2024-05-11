@@ -37,54 +37,33 @@ namespace BlogSpot.Web.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BlogPostId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tags", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BlogPostTag",
-                columns: table => new
-                {
-                    TagsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    blogPostsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BlogPostTag", x => new { x.TagsId, x.blogPostsId });
                     table.ForeignKey(
-                        name: "FK_BlogPostTag_BlogPosts_blogPostsId",
-                        column: x => x.blogPostsId,
+                        name: "FK_Tags_BlogPosts_BlogPostId",
+                        column: x => x.BlogPostId,
                         principalTable: "BlogPosts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BlogPostTag_Tags_TagsId",
-                        column: x => x.TagsId,
-                        principalTable: "Tags",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BlogPostTag_blogPostsId",
-                table: "BlogPostTag",
-                column: "blogPostsId");
+                name: "IX_Tags_BlogPostId",
+                table: "Tags",
+                column: "BlogPostId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BlogPostTag");
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "BlogPosts");
-
-            migrationBuilder.DropTable(
-                name: "Tags");
         }
     }
 }
