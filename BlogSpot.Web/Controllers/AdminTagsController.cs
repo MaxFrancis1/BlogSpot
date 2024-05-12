@@ -40,7 +40,7 @@ namespace BlogSpot.Web.Controllers
 
             try
             {
-                var exists = await _blogSpotDbContext.Tags.AnyAsync(e => e.Name == tag.Name && e.DisplayName == tag.DisplayName);
+                bool exists = await _blogSpotDbContext.Tags.AnyAsync(e => e.Name == tag.Name);
 
                 if (!exists)
                 {

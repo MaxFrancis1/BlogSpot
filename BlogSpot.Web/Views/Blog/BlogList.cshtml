@@ -1,0 +1,35 @@
+﻿@model List<BlogSpot.Web.Models.Domain.BlogPost>
+
+
+@if (Model is null)
+{
+    <p>No Blogs found</p>
+}
+else
+{
+    <div class="container py-5">
+        <h1>Blogs</h1>
+        <table class="table">
+            <tbody>
+                <form method="post">
+                    @foreach (var blog in Model)
+                    {
+                    <tr>
+                        <td>
+                            <img src="@blog.FeaturedImageUrl" alt="This is an image!"> 
+                            <span>
+                                <h2>@blog.Heading</h2>
+                            </span>
+                        </td>
+                        <td>@blog.ShortDescription</td>
+                        <td>@blog.Author</td>
+                        <td>
+                            <a class="btn btn-primary" asp-controller="Blog" asp-action="BlogView" asp-route-id="@blog.Id">View full Blog</a>
+                        </td>
+                    </tr>
+                    }
+                </form>
+            </tbody>
+        </table>
+    </div>
+}

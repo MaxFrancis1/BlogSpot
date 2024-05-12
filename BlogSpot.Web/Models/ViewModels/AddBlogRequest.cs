@@ -1,15 +1,14 @@
-﻿namespace BlogSpot.Web.Models.Domain
+﻿using BlogSpot.Web.Models.Domain;
+
+namespace BlogSpot.Web.Models.ViewModels
 {
-    public class BlogPost
+    public class AddBlogRequest
     {
-        public Guid Id { get; set; }
         public string Heading { get; set; }
         public string Content { get; set; }
         public string ShortDescription { get; set; }
         public string FeaturedImageUrl { get; set; }
-        public DateTime PublishedDate { get; set; }
         public string Author { get; set; }
-        public bool Visible { get; set; }
-        public Tag Tag { get; set; }
+        public string Tag { get; set; }
     }
 }

@@ -1,0 +1,42 @@
+﻿@model BlogSpot.Web.Models.ViewModels.AddBlogRequest
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Add New Blog</h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    <h4>New Blog details</h4>
+    <form method="post">
+        <div class="row mb-3">
+            <div class="col">
+                <label class="form-label">Heading</label>
+                <input type="text" class="form-control" asp-for="Heading">
+            </div>
+            <div class="col">
+                <label class="form-label">Short Description</label>
+                <input type="text" class="form-control" asp-for="ShortDescription">
+            </div>
+            <div class="col">
+                <label class="form-label">Content</label>
+                <input type="text" class="form-control" asp-for="Content">
+            </div>
+            <div class="col">
+                <label class="form-label">Image URL</label>
+                <input type="text" class="form-control" asp-for="FeaturedImageUrl">
+            </div>
+            <div class="col">
+                <label class="form-label">Author</label>
+                <input type="text" class="form-control" asp-for="Author">
+            </div>
+            <div class="col">
+                <label class="form-label">Tag</label>
+                <input type="text" class="form-control" asp-for="Tag">
+            </div>
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-dark">Submit</button>
+        </div>
+    </form>
+</div>
