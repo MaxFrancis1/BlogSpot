@@ -1,40 +1,53 @@
-﻿@model List<BlogSpot.Web.Models.Domain.Tag>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
-@if (Model is null)
-{
-    <p>No Tags found</p>
-}
-else
-{
-    <div class="container py-5">
-        <h1>Tag List</h1>
-        <table class="table">
-            <thead>
-                <tr>
-
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Display Name</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <form method="post">
-                    @foreach (var tag in Model)
-                    {
-                    <tr>
-                        <td>@tag.Id</td>
-                        <td>@tag.Name</td>
-                        <td>@tag.DisplayName</td>
-                        <td>
-                            <a class="btn btn-primary" asp-controller="AdminTags" asp-action="TagEdit" asp-route-id="@tag.Id">Edit</a>
-                            <button type="submit" class="btn btn-outline-danger ms-3" asp-action="TagDelete" asp-controller="AdminTags" asp-route-id="@tag.Id">Delete</button>
-                        </td>
-                    </tr>
-                    }
-                </form>
-            </tbody>
-        </table>
+    <div class="bg-secondary bg-opacity-10 py-2">
+        <div class="container">
+            <h1>Tag List</h1>
+        </div>
     </div>
-}
+
+</head>
+<body>
+
+    @if (Model is null)
+    {
+        <p>No Tags found</p>
+    }
+    else
+    {
+        <div class="container py-5">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Display Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <form method="post">
+                        @foreach (var tag in Model)
+                        {
+                        <tr>
+                            <td>@tag.Id</td>
+                            <td>@tag.Name</td>
+                            <td>@tag.DisplayName</td>
+                            <td>
+                                <a class="btn btn-primary" asp-controller="AdminTags" asp-action="TagEdit" asp-route-id="@tag.Id">Edit</a>
+                                <button type="submit" class="btn btn-outline-danger ms-3" asp-action="TagDelete" asp-controller="AdminTags" asp-route-id="@tag.Id">Delete</button>
+                            </td>
+                        </tr>
+                        }
+                    </form>
+                </tbody>
+            </table>
+        </div>
+    }
+
+</body>
+</html>

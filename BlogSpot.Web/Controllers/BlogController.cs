@@ -19,9 +19,16 @@ namespace BlogSpot.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult BlogAdd()
+        public async Task<IActionResult> BlogAdd()
         {
-            return View();
+            var tagList = await _blogSpotDbContext.Tags.ToListAsync();
+
+            var viewModel = new AddBlogRequest
+            {
+                Tags = tagList
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -33,53 +40,43 @@ namespace BlogSpot.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            Tag foundTag = _blogSpotDbContext.Tags.Single(t => t.Name == addBlogRequest.Tag);
-
-            if (foundTag.Id == Guid.Empty)
+            var blog = new BlogPost
             {
-                // Tag was not found
-                ModelState.AddModelError("", "Submitted Tag was not found. Please enter a valid tag.");
-                return View("BlogAdd");
-            } else
+                Heading = addBlogRequest.Heading,
+                Content = addBlogRequest.Content,
+                ShortDescription = addBlogRequest.ShortDescription,
+                FeaturedImageUrl = addBlogRequest.FeaturedImageUrl,
+                Author = addBlogRequest.Author,
+                Tag = addBlogRequest.Tag,
+                Visible = false,
+                PublishedDate = DateTime.Now,
+            };
+
+            try
             {
-                var blog = new BlogPost
+                var exists = await _blogSpotDbContext.BlogPosts.AnyAsync(e => e.Heading == blog.Heading);
+
+                if (!exists)
                 {
-                    Heading = addBlogRequest.Heading,
-                    Content = addBlogRequest.Content,
-                    ShortDescription = addBlogRequest.ShortDescription,
-                    FeaturedImageUrl = addBlogRequest.FeaturedImageUrl,
-                    Author = addBlogRequest.Author,
-                    Tag = foundTag,
-                    Visible = false,
-                    PublishedDate = DateTime.Now,
-                };
+                    await _blogSpotDbContext.BlogPosts.AddAsync(blog);
+                    await _blogSpotDbContext.SaveChangesAsync();
 
-                try
-                {
-                    var exists = await _blogSpotDbContext.BlogPosts.AnyAsync(e => e.Heading == blog.Heading);
-
-                    if (!exists)
-                    {
-                        await _blogSpotDbContext.BlogPosts.AddAsync(blog);
-                        await _blogSpotDbContext.SaveChangesAsync();
-
-                        // Tag added successfully, redirect to a success page or display a success message
-                        return RedirectToAction("BlogAdd");
-                    }
-                    else
-                    {
-                        // Duplicate tag found, return an error or display a message to the user
-                        ModelState.AddModelError("", "Blog with the same Heading already exists.");
-                        return View("BlogAdd");
-                    }
+                    // Tag added successfully, redirect to a success page or display a success message
+                    return RedirectToAction("BlogAdd");
                 }
-                catch (Exception)
+                else
                 {
-                    // Handle database operation errors
-                    ModelState.AddModelError("", "An error occurred while processing your request. Please try again later.");
+                    // Duplicate tag found, return an error or display a message to the user
+                    ModelState.AddModelError("", "Blog with the same Heading already exists.");
                     return View("BlogAdd");
                 }
-            }            
+            }
+            catch (Exception)
+            {
+                // Handle database operation errors
+                ModelState.AddModelError("", "An error occurred while processing your request. Please try again later.");
+                return View("BlogAdd");
+            }
         }
 
         [HttpGet]

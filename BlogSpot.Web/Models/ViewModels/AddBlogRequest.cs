@@ -9,6 +9,7 @@ namespace BlogSpot.Web.Models.ViewModels
         public string ShortDescription { get; set; }
         public string FeaturedImageUrl { get; set; }
         public string Author { get; set; }
-        public string Tag { get; set; }
+        public Tag Tag { get; set; }
+        public List<Tag> Tags { get; set; }
     }
 }

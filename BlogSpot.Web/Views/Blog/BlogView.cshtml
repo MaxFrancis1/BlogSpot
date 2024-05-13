@@ -1,38 +1,40 @@
 ﻿@model BlogSpot.Web.Models.Domain.BlogPost
 
-<div class="bg-secondary bg-opacity-10 py-2">
-    <div class="container">
-        <h1>View Blog</h1>
-    </div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<div class="container py-5">
-    <form method="post">
-        <div class="row mb-3">
-            <div class="col">
-                <label class="form-label">Heading</label>
-                <input type="text" class="form-control" asp-for="Heading" readonly>
-            </div>
-            <div class="col">
-                <label class="form-label">Short Description</label>
-                <input type="text" class="form-control" asp-for="ShortDescription" readonly>
-            </div>
-            <div class="col">
-                <label class="form-label">Content</label>
-                <input type="text" class="form-control" asp-for="Content" readonly>
-            </div>
-            <div class="col">
-                <label class="form-label">Image URL</label>
-                <input type="text" class="form-control" asp-for="FeaturedImageUrl" readonly>
-            </div>
-            <div class="col">
-                <label class="form-label">Author</label>
-                <input type="text" class="form-control" asp-for="Author" readonly>
-            </div>
-            <div class="col">
-                <label class="form-label">Tag</label>
-                <input type="text" class="form-control" asp-for="Tag" readonly>
+    <div class="bg-secondary bg-opacity-10 py-2">
+        <div class="container">
+            <h1>View Blog</h1>
+        </div>
+    </div>
+
+</head>
+<body>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <div class="card" style="width: 75%;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="@Model.FeaturedImageUrl" class="img-fluid" alt="Blog Image">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h1 class="card-title">@Model.Heading</h1>
+                                <p class="card-text"><small class="text-muted">Published on @Model.PublishedDate.ToShortDateString() by @Model.Author</small></p>
+                                <p class="card-text">@Html.Raw(Model.Content)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </form>
-</div>
+    </div>
+
+</body>
+</html>
